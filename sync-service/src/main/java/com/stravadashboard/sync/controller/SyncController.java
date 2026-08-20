@@ -1,7 +1,6 @@
 package com.stravadashboard.sync.controller;
 
 import com.stravadashboard.sync.service.SyncService;
-import com.stravadashboard.sync.service.SyncServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +21,15 @@ public class SyncController {
     ) {
         int count = syncService.initialLoad(after);
         return ResponseEntity.ok("Initial load completed. " + count + " activities synced.");
+    }
 
+    @PostMapping("/sync/refresh-data")
+    public ResponseEntity<String> refreshData(){
+        try {
+            int count = syncService.loadDataSinceLastActivityDate();
+            return ResponseEntity.ok("Refresh completed. " + count + " activities synced.");
+        } catch (IllegalStateException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

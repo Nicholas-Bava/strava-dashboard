@@ -14,6 +14,10 @@ import org.springframework.web.client.RestClient;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Handles authentication and API communication with Strava.
+ * Manages OAuth token lifecycle including refresh and persistence.
+ */
 @Component
 @Slf4j
 public class StravaClient {
@@ -37,6 +41,10 @@ public class StravaClient {
         this.stravaTokenRepository = stravaTokenRepository;
     }
 
+    /**
+     * Returns the current refresh token from the database, falling back
+     * to the initial token from application config on first run.
+     */
     private String getRefreshToken() {
         String refreshToken = stravaTokenRepository.findById(1L)
                 .map(StravaToken::getRefreshToken)
@@ -44,6 +52,12 @@ public class StravaClient {
         return refreshToken;
     }
 
+    /**
+     * Exchanges the refresh token for a new access token via Strava's OAuth endpoint.
+     * Persists the new tokens to the database for future use.
+     *
+     * @throws RuntimeException if Strava returns an empty response
+     */
     public void refreshAccessToken() {
 
         String refToken = getRefreshToken();
@@ -77,6 +91,17 @@ public class StravaClient {
         log.info("Access token refreshed and saved to database. New expires_at: {}", this.stravaToken.getExpiresAt());
     }
 
+    /**
+     * Fetches a page of activities from the Strava API within the given time range.
+     * Automatically refreshes the access token if expired.
+     *
+     * @param after   epoch timestamp — only return activities after this time
+     * @param before  epoch timestamp — only return activities before this time
+     * @param page    page number (starts at 1)
+     * @param perPage number of activities per page (max 200)
+     * @return list of raw activity data as key-value maps
+     * @throws RuntimeException if the access token is null after refresh attempt
+     */
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> getActivities(long after, long before, int page, int perPage) {
 
