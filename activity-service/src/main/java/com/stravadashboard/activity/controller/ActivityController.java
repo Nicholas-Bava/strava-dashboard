@@ -2,6 +2,7 @@ package com.stravadashboard.activity.controller;
 
 import com.stravadashboard.activity.dto.ActivityRequest;
 import com.stravadashboard.activity.dto.ActivityResponse;
+import com.stravadashboard.activity.dto.CumulativeResponse;
 import com.stravadashboard.activity.service.ActivityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +18,11 @@ public class ActivityController {
         this.activityService = activityService;
     }
 
-    @PostMapping("/activity/get-activities")
-    public ResponseEntity<ActivityResponse> getActivities (
+    @PostMapping("/activity/cumulative")
+    public ResponseEntity<CumulativeResponse> getCumulativeActivityChart (
             @RequestBody ActivityRequest activityRequest
     ) {
-        ActivityResponse response = this.activityService.getActivities(activityRequest);
+        CumulativeResponse response = this.activityService.getCumulativeActivityChart(activityRequest);
         return ResponseEntity.ok(response);
     }
 

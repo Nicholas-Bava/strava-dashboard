@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ActivityRequest {
     private ActivityFilters activityFilters;
+    private String metric;
     private String sortBy = "startDate";
     private String sortDirection = "desc";
     private boolean paginated = true;
