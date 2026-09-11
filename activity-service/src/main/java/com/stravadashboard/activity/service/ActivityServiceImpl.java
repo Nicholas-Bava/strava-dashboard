@@ -2,6 +2,7 @@ package com.stravadashboard.activity.service;
 
 import com.stravadashboard.activity.dto.ActivityRequest;
 import com.stravadashboard.activity.constants.*;
+import com.stravadashboard.activity.dto.BaseResponse;
 import com.stravadashboard.activity.dto.CumulativeResponse;
 import com.stravadashboard.common.entity.Activity;
 import com.stravadashboard.common.repository.ActivityRepository;
@@ -27,7 +28,7 @@ public class ActivityServiceImpl implements ActivityService{
     }
 
     @Override
-    public CumulativeResponse getCumulativeActivityChart(ActivityRequest activityRequest) {
+    public BaseResponse getCumulativeActivityChart(ActivityRequest activityRequest) {
 
         CumulativeResponse cumulativeResponse = new CumulativeResponse();
 

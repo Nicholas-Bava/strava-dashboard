@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CumulativeResponse {
+public class CumulativeResponse extends BaseResponse{
     private String metric;
     private List<YearLine> lines;
 
