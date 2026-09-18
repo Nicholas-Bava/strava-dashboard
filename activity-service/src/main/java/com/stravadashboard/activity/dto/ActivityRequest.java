@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ActivityRequest {
     private ActivityFilters activityFilters;
     private String metric;
