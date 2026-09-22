@@ -7,4 +7,6 @@ import com.stravadashboard.activity.dto.CumulativeResponse;
 public interface ActivityService {
 
     public BaseResponse getCumulativeActivityChart(ActivityRequest activityRequest);
+
+    public BaseResponse getActivities(ActivityRequest activityRequest);
 }

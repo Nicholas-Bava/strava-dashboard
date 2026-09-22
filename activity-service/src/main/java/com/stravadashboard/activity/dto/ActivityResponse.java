@@ -11,6 +11,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ActivityResponse {
+public class ActivityResponse extends BaseResponse{
     private List<Activity> activities;
 }

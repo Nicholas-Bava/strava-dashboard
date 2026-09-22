@@ -25,4 +25,12 @@ public class ActivityController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/activity/list")
+    public ResponseEntity<BaseResponse> getActivities (
+            @RequestBody ActivityRequest activityRequest
+    ) {
+        BaseResponse response = this.activityService.getActivities(activityRequest);
+        return ResponseEntity.ok(response);
+    }
+
 }

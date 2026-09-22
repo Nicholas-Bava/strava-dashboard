@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-@Component
 @Slf4j
 public class CumulativeProcessor extends BaseProcessor{
 
@@ -85,5 +84,10 @@ public class CumulativeProcessor extends BaseProcessor{
         cumulativeResponse.setLines(yearLines);
         cumulativeResponse.setMetric(metric);
         return cumulativeResponse;
+    }
+
+    public BaseResponse processDrillThrough(List<Activity> activities) {
+        // Implementation for drill-through processing
+        return null;
     }
 }

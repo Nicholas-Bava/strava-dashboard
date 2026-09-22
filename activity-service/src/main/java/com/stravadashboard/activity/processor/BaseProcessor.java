@@ -10,4 +10,5 @@ public abstract class BaseProcessor {
 
     public abstract List<Activity> retrieveData(ActivityRequest activityRequest);
     public abstract BaseResponse processAggregate(List<Activity> activities, ActivityRequest activityRequest);
+    public abstract BaseResponse processDrillThrough (List<Activity> activities);
 }

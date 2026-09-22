@@ -4,6 +4,8 @@ import com.stravadashboard.activity.dto.ActivityRequest;
 import com.stravadashboard.activity.constants.*;
 import com.stravadashboard.activity.dto.BaseResponse;
 import com.stravadashboard.activity.dto.CumulativeResponse;
+import com.stravadashboard.activity.processor.ActivityProcessor;
+import com.stravadashboard.activity.processor.CumulativeProcessor;
 import com.stravadashboard.activity.processor.ProcessorOrchestrator;
 import com.stravadashboard.common.entity.Activity;
 import com.stravadashboard.common.repository.ActivityRepository;
@@ -23,15 +25,24 @@ import java.util.List;
 public class ActivityServiceImpl implements ActivityService{
 
     private final ActivityRepository activityRepository;
-    private final ProcessorOrchestrator processorOrchestrator;
+    private final CumulativeProcessor cumulativeProcessor;
+    private final ActivityProcessor activityProcessor;
 
-    public ActivityServiceImpl(ActivityRepository activityRepository, ProcessorOrchestrator processorOrchestrator) {
+    public ActivityServiceImpl(ActivityRepository activityRepository) {
         this.activityRepository = activityRepository;
-        this.processorOrchestrator = processorOrchestrator;
+        this.activityProcessor = new ActivityProcessor(activityRepository);
+        this.cumulativeProcessor = new CumulativeProcessor(activityRepository);
     }
 
     @Override
     public BaseResponse getCumulativeActivityChart(ActivityRequest activityRequest) {
+        ProcessorOrchestrator processorOrchestrator = new ProcessorOrchestrator(cumulativeProcessor);
+        return processorOrchestrator.orchestrate(activityRequest);
+    }
+
+    @Override
+    public BaseResponse getActivities(ActivityRequest activityRequest) {
+        ProcessorOrchestrator processorOrchestrator = new ProcessorOrchestrator(activityProcessor);
         return processorOrchestrator.orchestrate(activityRequest);
     }
 }
