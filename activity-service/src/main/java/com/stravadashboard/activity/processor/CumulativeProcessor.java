@@ -12,10 +12,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 public class CumulativeProcessor extends BaseProcessor{
@@ -74,10 +71,13 @@ public class CumulativeProcessor extends BaseProcessor{
                         log.warn("No metric comparison found for this request");
                         break;
                 }
+                // Day of year - may phase out using date implementation... keep for now
                 int dayOfYear = a.getStartDate()
                         .atZone(ZoneId.of(ActivityConstants.ZONE_US_EASTERN))
                         .getDayOfYear();
-                dataPoints.add(new CumulativeResponse.DataPoint(dayOfYear, cumulativeYearlyTotal));
+                // Date
+                Date startDate = Date.from(a.getStartDate());
+                dataPoints.add(new CumulativeResponse.DataPoint(dayOfYear, cumulativeYearlyTotal, startDate));
             }
             yearLines.add(new CumulativeResponse.YearLine(year, dataPoints));
         }
