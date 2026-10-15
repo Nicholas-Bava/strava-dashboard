@@ -45,4 +45,13 @@ public class ActivityServiceImpl implements ActivityService{
         ProcessorOrchestrator processorOrchestrator = new ProcessorOrchestrator(activityProcessor);
         return processorOrchestrator.orchestrate(activityRequest);
     }
+
+    @Override
+    public List<Integer> getActivityYears(ActivityRequest activityRequest) {
+        String sportType = activityRequest.getActivityFilters().getSportType();
+        return activityRepository.findDistinctYearsBySportType(sportType).stream()
+                .map(Integer::parseInt)
+                .sorted()
+                .toList();
+    }
 }
