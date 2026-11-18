@@ -92,4 +92,6 @@ public class Activity {
     private String deviceName;
     private Integer resourceState;
 
+    private Instant lapsSyncedAt;
+
 }

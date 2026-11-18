@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ActivityRequest {
     private ActivityFilters activityFilters;
+    private Long id;
     private String metric;
     private String sortBy = "startDate";
     private boolean sortDescending = true;

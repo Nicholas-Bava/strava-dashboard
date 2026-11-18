@@ -13,7 +13,7 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 @Slf4j
-public class ActivityProcessor extends BaseProcessor{
+public class ActivityProcessor extends BaseProcessor<Activity>{
 
     private final ActivityRepository activityRepository;
 

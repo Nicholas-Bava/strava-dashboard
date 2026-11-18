@@ -13,4 +13,6 @@ public interface ActivityService {
     public BaseResponse getActivities(ActivityRequest activityRequest);
 
     public List<Integer> getActivityYears(ActivityRequest activityRequest);
+
+    public BaseResponse getActivityLaps(ActivityRequest activityRequest);
 }

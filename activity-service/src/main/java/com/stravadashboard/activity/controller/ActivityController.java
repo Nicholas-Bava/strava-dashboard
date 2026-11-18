@@ -43,4 +43,12 @@ public class ActivityController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/activity/laps")
+    public ResponseEntity<BaseResponse> getActivityLaps (
+            @RequestBody ActivityRequest activityRequest
+    ) {
+        BaseResponse response = this.activityService.getActivityLaps(activityRequest);
+        return ResponseEntity.ok(response);
+    }
+
 }

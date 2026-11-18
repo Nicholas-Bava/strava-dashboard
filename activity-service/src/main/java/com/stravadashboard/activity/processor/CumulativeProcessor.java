@@ -15,7 +15,7 @@ import java.time.ZoneOffset;
 import java.util.*;
 
 @Slf4j
-public class CumulativeProcessor extends BaseProcessor{
+public class CumulativeProcessor extends BaseProcessor<Activity>{
 
     private final ActivityRepository activityRepository;
 
