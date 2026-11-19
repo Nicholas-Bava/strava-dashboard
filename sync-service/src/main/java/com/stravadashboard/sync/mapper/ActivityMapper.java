@@ -1,6 +1,7 @@
 package com.stravadashboard.sync.mapper;
 
 import com.stravadashboard.common.entity.Activity;
+import com.stravadashboard.sync.utils.MapperUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -9,16 +10,20 @@ import java.util.Map;
 
 @Component
 public class ActivityMapper {
+
+    MapperUtils mapperUtils = new MapperUtils();
+
+    @SuppressWarnings("unchecked")
     public Activity mapToActivity(Map<String, Object> raw) {
         Activity a = new Activity();
 
         // IDs
-        a.setId(getLong(raw, "id"));
-        a.setResourceState(getInteger(raw, "resource_state"));
+        a.setId(mapperUtils.getLong(raw, "id"));
+        a.setResourceState(mapperUtils.getInteger(raw, "resource_state"));
 
         Map<String, Object> athlete = (Map<String, Object>) raw.get("athlete");
         if (athlete != null) {
-            a.setAthleteId(getLong(athlete, "id"));
+            a.setAthleteId(mapperUtils.getLong(athlete, "id"));
         }
 
         // Core info
@@ -34,10 +39,10 @@ public class ActivityMapper {
         a.setDeviceName((String) raw.get("device_name"));
 
         // Distance and time
-        a.setDistance(getDouble(raw, "distance"));
-        a.setMovingTime(getInteger(raw, "moving_time"));
-        a.setElapsedTime(getInteger(raw, "elapsed_time"));
-        a.setTotalElevationGain(getDouble(raw, "total_elevation_gain"));
+        a.setDistance(mapperUtils.getDouble(raw, "distance"));
+        a.setMovingTime(mapperUtils.getInteger(raw, "moving_time"));
+        a.setElapsedTime(mapperUtils.getInteger(raw, "elapsed_time"));
+        a.setTotalElevationGain(mapperUtils.getDouble(raw, "total_elevation_gain"));
 
         // Dates
         String startDate = (String) raw.get("start_date");
@@ -46,7 +51,7 @@ public class ActivityMapper {
         }
         a.setStartDateLocal((String) raw.get("start_date_local"));
         a.setTimezone((String) raw.get("timezone"));
-        a.setUtcOffset(getDouble(raw, "utc_offset"));
+        a.setUtcOffset(mapperUtils.getDouble(raw, "utc_offset"));
 
         // Location strings
         a.setLocationCity((String) raw.get("location_city"));
@@ -54,13 +59,13 @@ public class ActivityMapper {
         a.setLocationCountry((String) raw.get("location_country"));
 
         // Counts
-        a.setAchievementCount(getInteger(raw, "achievement_count"));
-        a.setKudosCount(getInteger(raw, "kudos_count"));
-        a.setCommentCount(getInteger(raw, "comment_count"));
-        a.setAthleteCount(getInteger(raw, "athlete_count"));
-        a.setPhotoCount(getInteger(raw, "photo_count"));
-        a.setTotalPhotoCount(getInteger(raw, "total_photo_count"));
-        a.setPrCount(getInteger(raw, "pr_count"));
+        a.setAchievementCount(mapperUtils.getInteger(raw, "achievement_count"));
+        a.setKudosCount(mapperUtils.getInteger(raw, "kudos_count"));
+        a.setCommentCount(mapperUtils.getInteger(raw, "comment_count"));
+        a.setAthleteCount(mapperUtils.getInteger(raw, "athlete_count"));
+        a.setPhotoCount(mapperUtils.getInteger(raw, "photo_count"));
+        a.setTotalPhotoCount(mapperUtils.getInteger(raw, "total_photo_count"));
+        a.setPrCount(mapperUtils.getInteger(raw, "pr_count"));
 
         // Map / polyline
         Map<String, Object> map = (Map<String, Object>) raw.get("map");
@@ -70,17 +75,17 @@ public class ActivityMapper {
         }
 
         // Booleans
-        a.setTrainer(getBoolean(raw, "trainer"));
-        a.setCommute(getBoolean(raw, "commute"));
-        a.setManual(getBoolean(raw, "manual"));
-        a.setPrivateActivity(getBoolean(raw, "private"));
-        a.setFlagged(getBoolean(raw, "flagged"));
-        a.setFromAcceptedTag(getBoolean(raw, "from_accepted_tag"));
-        a.setHasHeartrate(getBoolean(raw, "has_heartrate"));
-        a.setHeartrateOptOut(getBoolean(raw, "heartrate_opt_out"));
-        a.setDisplayHideHeartrateOption(getBoolean(raw, "display_hide_heartrate_option"));
-        a.setDeviceWatts(getBoolean(raw, "device_watts"));
-        a.setHasKudoed(getBoolean(raw, "has_kudoed"));
+        a.setTrainer(mapperUtils.getBoolean(raw, "trainer"));
+        a.setCommute(mapperUtils.getBoolean(raw, "commute"));
+        a.setManual(mapperUtils.getBoolean(raw, "manual"));
+        a.setPrivateActivity(mapperUtils.getBoolean(raw, "private"));
+        a.setFlagged(mapperUtils.getBoolean(raw, "flagged"));
+        a.setFromAcceptedTag(mapperUtils.getBoolean(raw, "from_accepted_tag"));
+        a.setHasHeartrate(mapperUtils.getBoolean(raw, "has_heartrate"));
+        a.setHeartrateOptOut(mapperUtils.getBoolean(raw, "heartrate_opt_out"));
+        a.setDisplayHideHeartrateOption(mapperUtils.getBoolean(raw, "display_hide_heartrate_option"));
+        a.setDeviceWatts(mapperUtils.getBoolean(raw, "device_watts"));
+        a.setHasKudoed(mapperUtils.getBoolean(raw, "has_kudoed"));
 
         // Gear and visibility
         a.setVisibility((String) raw.get("visibility"));
@@ -99,44 +104,26 @@ public class ActivityMapper {
         }
 
         // Speed and performance
-        a.setAverageSpeed(getDouble(raw, "average_speed"));
-        a.setMaxSpeed(getDouble(raw, "max_speed"));
-        a.setAverageCadence(getDouble(raw, "average_cadence"));
-        a.setAverageHeartrate(getDouble(raw, "average_heartrate"));
-        a.setMaxHeartrate(getDouble(raw, "max_heartrate"));
-        a.setAverageWatts(getDouble(raw, "average_watts"));
-        a.setMaxWatts(getInteger(raw, "max_watts"));
-        a.setWeightedAverageWatts(getInteger(raw, "weighted_average_watts"));
-        a.setKilojoules(getDouble(raw, "kilojoules"));
-        a.setSufferScore(getDouble(raw, "suffer_score"));
+        a.setAverageSpeed(mapperUtils.getDouble(raw, "average_speed"));
+        a.setMaxSpeed(mapperUtils.getDouble(raw, "max_speed"));
+        a.setAverageCadence(mapperUtils.getDouble(raw, "average_cadence"));
+        a.setAverageHeartrate(mapperUtils.getDouble(raw, "average_heartrate"));
+        a.setMaxHeartrate(mapperUtils.getDouble(raw, "max_heartrate"));
+        a.setAverageWatts(mapperUtils.getDouble(raw, "average_watts"));
+        a.setMaxWatts(mapperUtils.getInteger(raw, "max_watts"));
+        a.setWeightedAverageWatts(mapperUtils.getInteger(raw, "weighted_average_watts"));
+        a.setKilojoules(mapperUtils.getDouble(raw, "kilojoules"));
+        a.setSufferScore(mapperUtils.getDouble(raw, "suffer_score"));
 
         // Elevation
-        a.setElevHigh(getDouble(raw, "elev_high"));
-        a.setElevLow(getDouble(raw, "elev_low"));
+        a.setElevHigh(mapperUtils.getDouble(raw, "elev_high"));
+        a.setElevLow(mapperUtils.getDouble(raw, "elev_low"));
 
         // Upload info
-        a.setUploadId(getLong(raw, "upload_id"));
+        a.setUploadId(mapperUtils.getLong(raw, "upload_id"));
         a.setExternalId((String) raw.get("external_id"));
 
         return a;
     }
 
-    private Double getDouble(Map<String, Object> map, String key) {
-        Number val = (Number) map.get(key);
-        return val != null ? val.doubleValue() : null;
-    }
-
-    private Integer getInteger(Map<String, Object> map, String key) {
-        Number val = (Number) map.get(key);
-        return val != null ? val.intValue() : null;
-    }
-
-    private Long getLong(Map<String, Object> map, String key) {
-        Number val = (Number) map.get(key);
-        return val != null ? val.longValue() : null;
-    }
-
-    private Boolean getBoolean(Map<String, Object> map, String key) {
-        return (Boolean) map.get(key);
-    }
 }

@@ -1,11 +1,15 @@
 package com.stravadashboard.sync.service;
 
 import com.stravadashboard.common.entity.Activity;
+import com.stravadashboard.common.entity.ActivityLap;
+import com.stravadashboard.common.repository.ActivityLapRepository;
 import com.stravadashboard.common.repository.ActivityRepository;
 import com.stravadashboard.sync.client.StravaClient;
+import com.stravadashboard.sync.mapper.ActivityLapMapper;
 import com.stravadashboard.sync.mapper.ActivityMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -23,11 +27,15 @@ public class SyncServiceImpl implements SyncService {
     private final StravaClient stravaClient;
     private final ActivityMapper activityMapper;
     private final ActivityRepository activityRepository;
+    private final ActivityLapMapper activityLapMapper;
+    private final ActivityLapRepository activityLapRepository;
 
-    public SyncServiceImpl(StravaClient stravaClient, ActivityMapper activityMapper, ActivityRepository activityRepository) {
+    public SyncServiceImpl(StravaClient stravaClient, ActivityMapper activityMapper,  ActivityLapMapper activityLapMapper, ActivityRepository activityRepository, ActivityLapRepository activityLapRepository) {
         this.stravaClient = stravaClient;
         this.activityMapper = activityMapper;
+        this.activityLapMapper = activityLapMapper;
         this.activityRepository = activityRepository;
+        this.activityLapRepository = activityLapRepository;
     }
 
     /**
@@ -66,6 +74,24 @@ public class SyncServiceImpl implements SyncService {
 
         long epochBefore = Instant.now().getEpochSecond();
         return callStravaClientForActivities(epochAfter, epochBefore, page, perPage);
+    }
+
+    /**
+     * Calls Strava to fetch and store laps for a particular activity
+     *
+     * @param activityId  activity id
+     */
+    @Override
+    @Transactional
+    public void fetchAndStoreLaps(Long activityId) {
+        Activity activity = activityRepository.findById(activityId)
+                .orElseThrow(() -> new IllegalArgumentException("Activity not found: " + activityId));
+
+        callStravaClientForLaps(activityId);
+
+        activity.setLapsSyncedAt(Instant.now());
+        activityRepository.save(activity);
+
     }
 
     /**
@@ -109,4 +135,25 @@ public class SyncServiceImpl implements SyncService {
         }
         return runningCount;
     }
+
+    /**
+     * Fetch and store laps for given activity
+     *
+     * @param activityId  activity id
+     */
+    private void callStravaClientForLaps (Long activityId) {
+
+        List<Map<String, Object>> rawLaps = stravaClient.getLaps(activityId);
+
+        if (rawLaps == null) {
+            throw new IllegalStateException("Strava returned no lap response for activity " + activityId);
+        }
+
+        List<ActivityLap> entityList = rawLaps.stream()
+                .map(activityLapMapper::mapToActivityLap)
+                .toList();
+        activityLapRepository.saveAll(entityList);
+    }
+
+
 }

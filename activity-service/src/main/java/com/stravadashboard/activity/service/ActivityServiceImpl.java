@@ -1,5 +1,6 @@
 package com.stravadashboard.activity.service;
 
+import com.stravadashboard.activity.client.SyncClient;
 import com.stravadashboard.activity.dto.ActivityRequest;
 import com.stravadashboard.activity.dto.BaseResponse;
 import com.stravadashboard.activity.processor.ActivityLapProcessor;
@@ -22,12 +23,13 @@ public class ActivityServiceImpl implements ActivityService{
     private final ActivityProcessor activityProcessor;
     private final ActivityLapProcessor activityLapProcessor;
 
-    public ActivityServiceImpl(ActivityRepository activityRepository, ActivityLapRepository activityLapRepository) {
+
+    public ActivityServiceImpl(ActivityRepository activityRepository, ActivityLapRepository activityLapRepository, SyncClient syncClient) {
         this.activityRepository = activityRepository;
         this.activityLapRepository = activityLapRepository;
         this.activityProcessor = new ActivityProcessor(activityRepository);
         this.cumulativeProcessor = new CumulativeProcessor(activityRepository);
-        this.activityLapProcessor = new ActivityLapProcessor(activityLapRepository, activityRepository);
+        this.activityLapProcessor = new ActivityLapProcessor(activityLapRepository, activityRepository, syncClient);
     }
 
     @Override

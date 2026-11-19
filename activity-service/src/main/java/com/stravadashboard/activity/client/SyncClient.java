@@ -1,9 +1,11 @@
 package com.stravadashboard.activity.client;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+@Slf4j
 @Component
 public class SyncClient {
 
@@ -15,9 +17,13 @@ public class SyncClient {
 
     public boolean syncLaps(Long id) {
         try {
-            // Implementation for syncing laps
+            restClient.post()
+                    .uri("/sync/activities/{id}/laps", id)
+                    .retrieve()
+                    .toBodilessEntity();
             return true;
         } catch (Exception e) {
+            log.warn("Lap sync failed for activity {}: {}", id, e.getMessage());
             return false;
         }
     }

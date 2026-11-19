@@ -5,6 +5,7 @@ import com.stravadashboard.sync.entity.StravaToken;
 import com.stravadashboard.sync.repository.StravaTokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -102,13 +103,9 @@ public class StravaClient {
      * @return list of raw activity data as key-value maps
      * @throws RuntimeException if the access token is null after refresh attempt
      */
-    @SuppressWarnings("unchecked")
     public List<Map<String, Object>> getActivities(long after, long before, int page, int perPage) {
 
-        if (stravaToken == null || stravaToken.getExpiresAt() < System.currentTimeMillis() / 1000) {
-            refreshAccessToken();
-            log.info("Access token refreshed");
-        }
+        tokenCheck();
 
         if (stravaToken != null) {
             return restClient.get()
@@ -123,9 +120,41 @@ public class StravaClient {
                             .build())
                     .header("Authorization", "Bearer " + stravaToken.getAccessToken())
                     .retrieve()
-                    .body(List.class);
+                    .body(new ParameterizedTypeReference<List<Map<String, Object>>>() {});
         } else {
             throw new RuntimeException("Access token is null after refresh attempt");
+        }
+    }
+
+    /**
+     * Fetches the lap data for a single activity
+     *
+     * @param activityId   id for the given activity
+     * @throws RuntimeException if the access token is null after refresh attempt
+     */
+    public List<Map<String, Object>> getLaps(Long activityId) {
+
+        tokenCheck();
+
+        if (stravaToken != null) {
+            return restClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .scheme("https")
+                            .host("www.strava.com")
+                            .path("/api/v3/activities/{id}/laps")
+                            .build(activityId))
+                    .header("Authorization", "Bearer " + stravaToken.getAccessToken())
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<List<Map<String, Object>>>() {});
+        } else {
+            throw new RuntimeException("Access token is null after refresh attempt");
+        }
+    }
+
+    private void tokenCheck(){
+        if (stravaToken == null || stravaToken.getExpiresAt() < System.currentTimeMillis() / 1000) {
+            refreshAccessToken();
+            log.info("Access token refreshed");
         }
     }
 }
